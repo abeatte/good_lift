@@ -1,17 +1,22 @@
 import './App.css'
-import { useQuery } from './hooks/useQuery'
+import { useGetMeet } from './api/hooks/useGetMeet';
+import { useQueryMeets } from './api/hooks/useQueryMeets';
 
 function App() {
-  const { data, isLoading, error } = useQuery<unknown>(['liftingcast-data'], 'endpoint');
+  const { data: meets, isLoading: meetsLoading, error: meetsError } = useQueryMeets();
+  const { data: meet, isLoading: meetLoading, error: meetError } = useGetMeet({ meet_id: 'm08qj6i5tls9' })
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (meetsLoading || meetLoading) return <div>Loading...</div>;
+  if (meetsError || meetError) return <div>Error: {meetsError?.message ?? meetError?.message}</div>;
 
   return (
     <>
       <h1>Liftingcast API</h1>
       <div className="card">
-        <pre>{JSON.stringify(data, null, 2)}</pre>
+        <pre>{JSON.stringify(meet, null, 2)}</pre>
+      </div>
+      <div className="card">
+        <pre>{JSON.stringify(meets, null, 2)}</pre>
       </div>
     </>
   )

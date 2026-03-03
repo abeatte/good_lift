@@ -4,7 +4,7 @@ export const COUCHDB_BASE_URI = 'https://couchdb.liftingcast.com';
 
 export const apiClient = {
   get: async <T>(endpoint: string): Promise<T> => {
-    const response = await fetch(`${API_BASE_URI}/${endpoint}`);
+    const response = await fetch(`${API_BASE_URI}${endpoint}`);
     if (!response.ok) {
       throw new Error(`API Error: ${response.statusText}`);
     }
@@ -12,7 +12,7 @@ export const apiClient = {
   },
   
   post: async <T>(endpoint: string, data: unknown): Promise<T> => {
-    const response = await fetch(`${API_BASE_URI}/${endpoint}`, {
+    const response = await fetch(`${API_BASE_URI}${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
