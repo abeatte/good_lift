@@ -8,7 +8,7 @@ export const useQueryMeets = (query_type: queryType = 'all') => {
   return useQuery<Meet[]>({
     queryKey: ['meets', query_type],
     queryFn: async () => {
-      const data = await apiClient.get<Meets>('/meets');
+      const data = await apiClient.baseGet<Meets>('/meets');
       const response = MeetsResponseSchema.parse(data);
 
       const now = new Date().getTime();

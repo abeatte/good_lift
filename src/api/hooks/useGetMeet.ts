@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { COUCHDB_BASE_URI } from '../api';
+import { apiClient } from '../api';
+import type { MeetData } from '../types/meetData';
 
 interface UseGetMeetParams {
     meet_id: string;
@@ -17,16 +18,13 @@ export const useGetMeet = (params: UseGetMeetParams) => {
         include_docs: String(include_docs),
     });
 
-    const MEET_URL = `${COUCHDB_BASE_URI}/${meet_id}_readonly/_all_docs?${queryParams}`;
+    const endpoint = `/${meet_id}_readonly/_all_docs?${queryParams}`;
 
     return useQuery({
         queryKey: ['meet', params],
         queryFn: async () => {
-            const response = await fetch(MEET_URL);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch meet data: ${response.statusText}`);
-            }
-            return response.json();
+            const response = await apiClient.couchGet<MeetData>(endpoint);
+            return response;
         },
     });
 };
