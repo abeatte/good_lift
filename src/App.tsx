@@ -1,6 +1,7 @@
 import './App.css'
 import { useQueryMeets } from './api/hooks/useQueryMeets';
 import Meet from './components/Meet';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function App() {
   const { data: meets, isLoading, error } = useQueryMeets('past');
@@ -16,6 +17,7 @@ function App() {
       <div className="card">
         <pre>{JSON.stringify(meets, null, 2)}</pre>
       </div>
+      <ReactQueryDevtools initialIsOpen={false} />
     </>
   )
 }
