@@ -1,14 +1,27 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../api';
-import { type Meet, MeetsResponseSchema } from '../types/meet';
+import { type Meet, type Meets, MeetsResponseSchema } from '../types/meet';
 
-export const useQueryMeets = () => {
+type queryType = 'past' | 'future' | 'all';
+
+export const useQueryMeets = (query_type: queryType = 'all') => {
   return useQuery<Meet[]>({
-    queryKey: ['meets'],
+    queryKey: ['meets', query_type],
     queryFn: async () => {
-      const data = await apiClient.get('/meets');
+      const data = await apiClient.get<Meets>('/meets');
       const response = MeetsResponseSchema.parse(data);
-      return response.docs;
+
+      const now = new Date().getTime();
+
+      const meets = response.docs;
+      switch(query_type) {
+        case 'past':
+          return meets.filter(meet => meet.date.getTime() < now);
+        case 'future':
+          return meets.filter(meet => meet.date.getTime() > now);
+        default:
+          return meets;
+      }
     },
   });
 };
